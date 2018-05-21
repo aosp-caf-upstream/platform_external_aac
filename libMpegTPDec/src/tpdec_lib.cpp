@@ -283,7 +283,7 @@ TRANSPORTDEC_ERROR transportDec_OutOfBandConfig(HANDLE_TRANSPORTDEC hTp,
 
   for (i = 0; i < 2; i++) {
     if (i > 0) {
-      FDKpushBack(hBs, length * 8 - FDKgetValidBits(hBs));
+      FDKpushBack(hBs, (INT)length * 8 - (INT)FDKgetValidBits(hBs));
       configMode = AC_CM_ALLOC_MEM;
     }
 
@@ -1151,6 +1151,12 @@ static TRANSPORTDEC_ERROR synchronization(HANDLE_TRANSPORTDEC hTp,
                                     &syncLayerFrameBits, &fConfigFound,
                                     &headerBits);
       if (TPDEC_IS_FATAL_ERROR(err)) {
+        /* Rewind - TPDEC_SYNCSKIP, in order to look for a synch one bit ahead
+         * next time. Ensure that the bit amount lands at a multiple of
+         * TPDEC_SYNCSKIP. */
+        FDKpushBiDirectional(
+            hBs, -headerBits + TPDEC_SYNCSKIP + (bitsAvail % TPDEC_SYNCSKIP));
+
         goto bail;
       }
     }

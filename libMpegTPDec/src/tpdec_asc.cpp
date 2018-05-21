@@ -257,11 +257,11 @@ static int CProgramConfig_ReadHeightExt(CProgramConfig *pPce,
     }
   } else {
     /* No valid extension data found -> restore the initial bitbuffer state */
-    FDKpushBack(bs, startAnchor - FDKgetValidBits(bs));
+    FDKpushBack(bs, (INT)startAnchor - (INT)FDKgetValidBits(bs));
   }
 
   /* Always report the bytes read. */
-  *bytesAvailable -= (startAnchor - FDKgetValidBits(bs)) >> 3;
+  *bytesAvailable -= ((INT)startAnchor - (INT)FDKgetValidBits(bs)) >> 3;
 
   return (err);
 }
@@ -2488,7 +2488,7 @@ TRANSPORTDEC_ERROR DrmRawSdcAudioConfig_Parse(
 
     switch (audioCoding) {
       case 0: /* AAC */
-        if (coderField >> 2) {
+        if ((coderField >> 2) && (audioMode != 1)) {
           self->m_aot = AOT_DRM_SURROUND; /* Set pseudo AOT for Drm Surround */
         } else {
           self->m_aot = AOT_DRM_AAC; /* Set pseudo AOT for Drm AAC */
