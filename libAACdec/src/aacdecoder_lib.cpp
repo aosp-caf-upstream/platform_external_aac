@@ -1082,7 +1082,7 @@ static void aacDecoder_UpdateBitStreamCounters(CStreamInfo *pSi,
 
   /* bit/byte counters */
   {
-    int nBytes;
+    INT nBytes;
 
     nBytes = nBits >> 3;
     pSi->numTotalBytes += nBytes;
